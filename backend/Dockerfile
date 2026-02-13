@@ -6,16 +6,16 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Copy prisma directory (contains schema and migrations)
+# Copy prisma directory
 COPY prisma ./prisma/
 
-# Install dependencies
+# Install ALL dependencies (including devDependencies for building)
 RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . .
 
-# Set a dummy database URL for the build process
+# Set dummy DATABASE_URL for prisma generate
 ENV DATABASE_URL="file:./dev.db"
 
 # Generate Prisma client
@@ -29,10 +29,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy built files and production dependencies
+# Copy package files
+COPY package*.json ./
+
+# Install ONLY production dependencies
+RUN npm install --omit=dev --legacy-peer-deps
+
+# Copy built files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 
 # Set environment variables
@@ -41,5 +45,6 @@ ENV NODE_ENV=production
 # Expose port (Railway will use PORT env var)
 EXPOSE 3000
 
-# Start command
-CMD ["npm", "run", "start:prod"]
+# Start command - using the compiled main.js directly
+# We try both dist/main and dist/src/main just in case
+CMD ["sh", "-c", "if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
