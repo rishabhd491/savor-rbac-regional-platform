@@ -16,9 +16,10 @@ import { CartModule } from './cart/cart.module';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
       sortSchema: true,
       playground: true,
+      introspection: true,
       context: async ({ req }) => {
         const userId = req.headers['x-user-id'] as string;
         return { req, userId };
