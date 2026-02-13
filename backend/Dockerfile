@@ -35,8 +35,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install ONLY production dependencies
-RUN npm install --omit=dev --legacy-peer-deps
+# Install ONLY production dependencies + tools needed for seeding
+RUN npm install --omit=dev --legacy-peer-deps && \
+    npm install ts-node typescript --no-save --legacy-peer-deps
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
