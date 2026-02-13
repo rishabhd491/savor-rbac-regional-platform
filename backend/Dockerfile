@@ -43,7 +43,6 @@ RUN npm install --omit=dev --legacy-peer-deps && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
 # IMPORTANT: Re-generate Prisma Client in the production stage
 # This ensures the client is correctly linked to the production node_modules
