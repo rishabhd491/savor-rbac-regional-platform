@@ -27,6 +27,9 @@ RUN npm run build
 # Production stage
 FROM node:20-alpine
 
+# Install libc6-compat for Prisma
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 # Copy package files
@@ -41,13 +44,14 @@ COPY --from=builder /app/prisma ./prisma
 
 # IMPORTANT: Re-generate Prisma Client in the production stage
 # This ensures the client is correctly linked to the production node_modules
+# and includes the correct binary for Alpine
 RUN npx prisma generate
 
 # Set environment variables
 ENV NODE_ENV=production
 
-# Expose port
-EXPOSE 3000
+# Expose port (Railway will override this with its own PORT)
+EXPOSE 4000
 
 # Start command
 CMD ["sh", "-c", "if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
