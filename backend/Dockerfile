@@ -15,8 +15,11 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
+# Set a dummy database URL for the build process
+ENV DATABASE_URL="file:./dev.db"
+
 # Generate Prisma client
-RUN DATABASE_URL="file:./dev.db" npx prisma generate
+RUN npx prisma generate
 
 # Build the app
 RUN npm run build
