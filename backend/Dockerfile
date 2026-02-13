@@ -54,5 +54,5 @@ ENV NODE_ENV=production
 # Expose port (Railway will override this with its own PORT)
 EXPOSE 4000
 
-# Start command
-CMD ["sh", "-c", "if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
+# Start command: Automate migrations and seeding on every start
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
