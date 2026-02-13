@@ -39,9 +39,11 @@ COPY package*.json ./
 RUN npm install --omit=dev --legacy-peer-deps && \
     npm install ts-node typescript --no-save --legacy-peer-deps
 
-# Copy built files from builder
+# Copy built files and config from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
 # IMPORTANT: Re-generate Prisma Client in the production stage
 # This ensures the client is correctly linked to the production node_modules
@@ -55,4 +57,4 @@ ENV NODE_ENV=production
 EXPOSE 4000
 
 # Start command: Automate migrations and seeding on every start
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed -- --transpile-only && npm run start:prod"]
