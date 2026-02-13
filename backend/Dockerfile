@@ -9,7 +9,7 @@ COPY package*.json ./
 # Copy prisma directory
 COPY prisma ./prisma/
 
-# Install ALL dependencies (including devDependencies for building)
+# Install ALL dependencies
 RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
@@ -39,12 +39,15 @@ RUN npm install --omit=dev --legacy-peer-deps
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
+# IMPORTANT: Re-generate Prisma Client in the production stage
+# This ensures the client is correctly linked to the production node_modules
+RUN npx prisma generate
+
 # Set environment variables
 ENV NODE_ENV=production
 
-# Expose port (Railway will use PORT env var)
+# Expose port
 EXPOSE 3000
 
-# Start command - using the compiled main.js directly
-# We try both dist/main and dist/src/main just in case
+# Start command
 CMD ["sh", "-c", "if [ -f dist/src/main.js ]; then node dist/src/main.js; else node dist/main.js; fi"]
