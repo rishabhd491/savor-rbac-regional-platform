@@ -5,12 +5,14 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+# Copy prisma directory (contains schema and migrations)
 COPY prisma ./prisma/
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copy source code
+# Copy the rest of the application code
 COPY . .
 
 # Generate Prisma client
