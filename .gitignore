@@ -1,0 +1,16 @@
+node_modules
+.DS_Store
+dist
+.env
+*.db
+*.db-journal
+.next
+.vercel
+build
+.cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea
+.vscode
+*.log

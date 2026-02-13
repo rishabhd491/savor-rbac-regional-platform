@@ -1,0 +1,113 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CartItem {
+  createdAt: DateTime!
+  id: ID!
+  menuItem: MenuItem!
+  menuItemId: String!
+  quantity: Int!
+  restaurant: Restaurant
+  restaurantId: String!
+  updatedAt: DateTime!
+  user: User
+  userId: String!
+}
+
+enum Country {
+  AMERICA
+  INDIA
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type MenuItem {
+  id: ID!
+  name: String!
+  price: Float!
+  restaurantId: String!
+}
+
+type Mutation {
+  addToCart(menuItemId: ID!, quantity: Int! = 1, restaurantId: ID!): CartItem!
+  clearCart(restaurantId: ID): Boolean!
+  createOrder(itemIds: [ID!]!, paymentDetails: String, paymentType: String, restaurantId: ID!): Order!
+  createPaymentMethod(details: String!, type: String!): PaymentMethod!
+  login(country: Country!, name: String!, role: Role!): User!
+  removeFromCart(id: ID!): CartItem!
+  updateOrderPayment(orderId: ID!, paymentDetails: String, paymentType: String!): Order!
+  updateOrderStatus(orderId: ID!, status: OrderStatus!): Order!
+  updatePaymentMethod(details: String!, id: ID!, type: String!): PaymentMethod!
+}
+
+type Order {
+  createdAt: DateTime!
+  id: ID!
+  items: [OrderItem!]!
+  paymentDetails: String
+  paymentType: String
+  restaurant: Restaurant
+  restaurantId: String!
+  status: OrderStatus!
+  totalAmount: Float!
+  user: User
+  userId: String!
+}
+
+type OrderItem {
+  id: ID!
+  menuItem: MenuItem!
+  menuItemId: String!
+  quantity: Float!
+}
+
+enum OrderStatus {
+  CANCELLED
+  PAID
+  PENDING
+}
+
+type PaymentMethod {
+  createdAt: DateTime!
+  details: String!
+  id: ID!
+  type: String!
+  userId: String!
+}
+
+type Query {
+  cartItems: [CartItem!]!
+  me(id: ID!): User
+  orders: [Order!]!
+  paymentMethods: [PaymentMethod!]!
+  restaurant(id: ID!): Restaurant
+  restaurants: [Restaurant!]!
+  user(id: ID!): User
+  users: [User!]!
+}
+
+type Restaurant {
+  country: Country!
+  id: ID!
+  menuItems: [MenuItem]!
+  name: String!
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+type User {
+  country: Country!
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String!
+  role: Role!
+}
