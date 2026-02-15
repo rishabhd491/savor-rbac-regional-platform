@@ -62,7 +62,9 @@ export class OrdersService {
     // Restriction: Only MEMBERS in the INDIA region are blocked from checkout
     // ADMIN and MANAGER can checkout regardless of country
     if (user.role === Role.MEMBER && user.country === 'INDIA') {
-      throw new ForbiddenException('Checkout is disabled for Members in the India region');
+      throw new ForbiddenException(
+        'Checkout is disabled for Members in the India region',
+      );
     }
 
     const menuItems = await this.prisma.menuItem.findMany({

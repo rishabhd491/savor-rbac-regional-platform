@@ -7,7 +7,7 @@ export class CartService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(user?: User) {
-    const where = user ? { user: { country: user.country } } : {};
+    const where = user ? { userId: user.id } : {};
     return this.prisma.cartItem.findMany({
       where,
       include: {
@@ -73,7 +73,7 @@ export class CartService {
 
   async clearCart(user: User, restaurantId?: string) {
     const where: any = {
-      restaurant: { country: user.country },
+      userId: user.id,
     };
 
     if (restaurantId) {
