@@ -13,9 +13,8 @@ export class RestaurantsResolver {
   @Query(() => [Restaurant], { name: 'restaurants' })
   async getRestaurants(@Context() context: any) {
     const user = await this.authService.getUser(context.userId);
-    // Admins see all restaurants, others see restaurants in their country
-    const countryFilter = user?.role === 'ADMIN' ? undefined : user?.country;
-    return this.restaurantsService.findAll(countryFilter);
+    // Always show restaurants for the logged-in user's region
+    return this.restaurantsService.findAll(user?.country);
   }
 
   @Query(() => Restaurant, { name: 'restaurant', nullable: true })
