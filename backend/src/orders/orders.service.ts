@@ -7,35 +7,17 @@ export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(user: User) {
-    // Admins can see all orders
-    // Managers can see all orders in their country
-    // Members can only see their own orders
-    if (user.role === Role.ADMIN) {
-      return this.prisma.order.findMany({
-        include: {
-          items: { include: { menuItem: true } },
-          restaurant: true,
-          user: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-    }
-    if (user.role === Role.MANAGER || user.role === Role.MEMBER) {
-      // Managers and Members see orders for their country
-      // A Manager should see all orders for restaurants in their country
-      // A Member should see their own orders AND all orders in their country (as per your request)
-      return this.prisma.order.findMany({
-        where: {
-          restaurant: { country: user.country },
-        },
-        include: {
-          items: { include: { menuItem: true } },
-          restaurant: true,
-          user: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-    }
+    return this.prisma.order.findMany({
+      where: {
+        restaurant: { country: user.country },
+      },
+      include: {
+        items: { include: { menuItem: true } },
+        restaurant: true,
+        user: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async create(

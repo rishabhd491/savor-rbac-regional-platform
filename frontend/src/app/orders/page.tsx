@@ -147,11 +147,11 @@ export default function OrdersPage() {
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">
-            {user.role === 'ADMIN' ? 'Full System Orders' : `Orders in ${user.country}`}
+            {`Orders in ${user.country}`}
           </h1>
           <p className="text-gray-500 font-medium">
-            {user.role === 'ADMIN' 
-              ? 'Full system oversight across all regions' 
+            {user.role === 'ADMIN'
+              ? `Admin overview of all orders in ${user.country}`
               : user.role === 'MANAGER'
                 ? `Managing active orders for ${user.country}`
                 : `Viewing order history and active orders in ${user.country}`}
