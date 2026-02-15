@@ -53,7 +53,7 @@ type User = {
   country: string;
 };
 
-type CartItem = {
+export type CartItem = {
   id: string;
   menuItemId: string;
   restaurantId: string;

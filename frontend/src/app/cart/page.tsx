@@ -1,7 +1,7 @@
 'use client';
 
 import { Header } from '@/components/Header';
-import { useUser } from '@/hooks/useUser';
+import { useUser, type CartItem } from '@/hooks/useUser';
 import { useMutation, gql } from '@apollo/client';
 import { useState } from 'react';
 
@@ -20,7 +20,7 @@ export default function CartPage() {
   
   const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'CARD' | 'CASH'>('CASH');
   const [upiId, setUpiId] = useState('');
-  const [cardDetails] = useState({ number: '', expiry: '', name: '', cvv: '' });
+  const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', name: '', cvv: '' });
 
   if (!user) return null;
 
@@ -35,7 +35,7 @@ export default function CartPage() {
     }
     acc[rid].items.push(item);
     return acc;
-  }, {} as Record<string, { name: string, items: any[] }>);
+  }, {} as Record<string, { name: string; items: CartItem[] }>);
 
   const handlePlaceOrder = async (restaurantId: string) => {
     const items = groupedCart[restaurantId].items;
@@ -171,16 +171,22 @@ export default function CartPage() {
                           type="text"
                           placeholder="Card Number"
                           className="col-span-2 w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 focus:ring-2 focus:ring-orange-100 focus:border-orange-600 outline-none font-medium"
+                          value={cardDetails.number}
+                          onChange={(e) => setCardDetails({ ...cardDetails, number: e.target.value })}
                         />
                         <input
                           type="text"
                           placeholder="MM/YY"
                           className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 focus:ring-2 focus:ring-orange-100 focus:border-orange-600 outline-none font-medium"
+                          value={cardDetails.expiry}
+                          onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
                         />
                         <input
                           type="text"
                           placeholder="CVV"
                           className="w-full px-4 py-3 rounded-2xl bg-white border border-gray-100 focus:ring-2 focus:ring-orange-100 focus:border-orange-600 outline-none font-medium"
+                          value={cardDetails.cvv}
+                          onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
                         />
                       </div>
                     )}
